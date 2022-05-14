@@ -1,5 +1,14 @@
 # github-pr-slack-reminder
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/380a539992d941f0a6d9c045c48c580c)](https://www.codacy.com/gh/nnsnodnb/github-pr-slack-reminder/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nnsnodnb/github-pr-slack-reminder&amp;utm_campaign=Badge_Grade)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+[![PyPI Package version](https://badge.fury.io/py/gs-reminder.svg)](https://pypi.org/project/gs-reminder)
+[![Python Supported versions](https://img.shields.io/pypi/pyversions/gs-reminder.svg)](https://pypi.org/project/gs-reminder)
+[![format](https://img.shields.io/pypi/format/gs-reminder.svg)](https://pypi.org/project/gs-reminder)
+[![implementation](https://img.shields.io/pypi/implementation/gs-reminder.svg)](https://pypi.org/project/gs-reminder)
+[![LICENSE](https://img.shields.io/pypi/l/gs-reminder.svg)](https://pypi.org/project/gs-reminder)
+
 Notify Slack of a review of Pull Requests in the GitHub repository.
 
 ## Environments
@@ -40,6 +49,7 @@ gs_reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json
       }
     ]
     ```
+
 - `--limit` or `-l`
   - Optional
   - Number of Pull Requests to notify Slack. Max: 20 (default: 20)
