@@ -36,7 +36,7 @@ class Client:
                 "type": "button",
                 "text": {
                     "type": "plain_text",
-                    "text": "Check",
+                    "text": "Review",
                 },
                 "url": pull.html_url,
             },
@@ -68,7 +68,7 @@ class Client:
             reviewer_section,
         ]
 
-    def _build_block(self, repo: str, pulls: List[PullRequest]) -> List[Dict[str, Any]]:
+    def _build_block(self, repo: str, pulls: List[PullRequest], total_pulls: int) -> List[Dict[str, Any]]:
         blocks = [
             {
                 "type": "section",
@@ -78,22 +78,41 @@ class Client:
 
         for section in map(lambda pull: self._get_section(pull=pull), pulls):
             blocks += section
-        else:
+
+        if len(pulls) < total_pulls:
             blocks += [
                 {
-                    "type": "divider",
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"Number of remaining: *{total_pulls - len(pulls)}*",
+                    },
+                    "accessory": {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Watch",
+                        },
+                        "url": f"https://github.com/{repo}/pulls",
+                    },
                 },
             ]
 
+        blocks += [
+            {
+                "type": "divider",
+            },
+        ]
+
         return blocks
 
-    def post(self, repo: str, pulls: List[PullRequest]) -> None:
+    def post(self, repo: str, pulls: List[PullRequest], total_pulls: int) -> None:
         if not pulls:
             return
 
         payload: Dict[str, Any] = {
             "text": f"Waiting your review on {repo}.",
-            "blocks": self._build_block(repo=repo, pulls=pulls),
+            "blocks": self._build_block(repo=repo, pulls=pulls, total_pulls=total_pulls),
         }
 
         requests.post(url=self._webhook_url, data=json.dumps(payload))

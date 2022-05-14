@@ -7,27 +7,11 @@ import click
 
 from .bridge import BridgeUsername
 from .github import api as github_api
-from .github.models.pull_request import PullRequest
 from .slack import api as slack_api
-
-
-def get_pulls(repo: str) -> List[PullRequest]:
-    client = github_api.Client(token=os.getenv("GITHUB_TOKEN"))
-    # get pull requests
-    pulls = client.get_pulls(repo=repo)
-    # filter pull requests
-    pulls = list(filter(lambda pr: not pr.draft, pulls))
-
-    return pulls
 
 
 def get_bridge_usernames(file_username: str) -> List[BridgeUsername]:
     return list(map(lambda item: BridgeUsername(**item), json.loads(Path(file_username).read_text())))
-
-
-def send_block(repo: str, pulls: List[PullRequest], usernames: List[BridgeUsername]) -> None:
-    client = slack_api.Client(usernames=usernames)
-    client.post(repo=repo, pulls=pulls)
 
 
 @click.command(
@@ -50,10 +34,29 @@ Required environments variables\n
     help="Corresponding files for GitHub and Slack usernames. (see. example in README.md)",
     required=True,
 )
-def main(repo: str, file_username: str) -> None:
-    pulls = get_pulls(repo=repo)
+@click.option(
+    "--limit",
+    "-l",
+    type=int,
+    default=20,
+    help="Number of Pull Requests to notify Slack.",
+    required=True,
+)
+def main(repo: str, file_username: str, limit: int) -> None:
+    if limit > 20:
+        raise ValueError("Cannot set more than 20 items.")
+
+    gh = github_api.Client(token=os.environ["GITHUB_TOKEN"])
+    # get pull requests
+    pulls = gh.get_pulls(repo=repo, limit=limit)
+    # get total pull requests count
+    total_pulls = gh.get_total_pulls(repo=repo)
+    # get GitHub and GitHub bridge username
     usernames = get_bridge_usernames(file_username=file_username)
-    send_block(repo=repo, pulls=pulls, usernames=usernames)
+
+    # send slack
+    sl = slack_api.Client(usernames=usernames)
+    sl.post(repo=repo, pulls=pulls, total_pulls=total_pulls)
 
 
 if __name__ == "__main__":

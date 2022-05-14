@@ -40,10 +40,13 @@ gs_reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json
       }
     ]
     ```
+- `--limit` or `-l`
+  - Optional
+  - Number of Pull Requests to notify Slack. Max: 20 (default: 20)
 
 ## Example Result
 
-<img src="https://user-images.githubusercontent.com/9856514/168425744-bcfd0510-3ec3-433e-82c1-4d8d2d1940d8.png" alt="example result" width="500px">
+<img src="https://user-images.githubusercontent.com/9856514/168442310-af165e75-7329-4a37-8e67-3f2635c549ac.png" alt="example result" width="500px">
 
 ## License
 
