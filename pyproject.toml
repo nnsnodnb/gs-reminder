@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gs_reminder"
-version = "0.1.0"
+version = "0.2.0"
 description = "Notify Slack of a review of Pull Requests in the GitHub repository."
 authors = ["Yuya Oka <nnsnodnb@gmail.com>"]
 license = "MIT"
