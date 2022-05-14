@@ -19,7 +19,7 @@ jobs:
         python -m pip install -U pip
         pip install poetry==1.1.11
         poetry config virtualenvs.in-project true
-        poetry install
+        poetry install --no-dev
 
     - name: Send Test
       env:
