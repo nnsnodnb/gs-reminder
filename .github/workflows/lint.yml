@@ -3,13 +3,83 @@ name: Lint
 on: [pull_request]
 
 jobs:
+  black:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+
+    - name: black
+      uses: reviewdog/action-black@v2
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
+        level: warning
+
+  flake8:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+
+    - name: flake8
+      uses: reviewdog/action-flake8@v3
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
+        level: warning
+
+  mypy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+
+    - name: mypy
+      uses: tsuyoshicho/action-mypy@v3
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
+        level: warning
+
+  isort:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+
+    - name: isort
+      uses: isort/isort-action@master
+
   actionlint:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
 
-    - uses: reviewdog/action-actionlint@v1
+    - name: actionlint
+      uses: reviewdog/action-actionlint@v1
       with:
+        github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
         level: warning
