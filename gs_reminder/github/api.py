@@ -36,7 +36,7 @@ class Client:
                 pulls = pulls[:limit]
                 break
 
-            value = params.get("get", 1)
+            value = params.get("page", 1)
             params["page"] = value + 1
 
         return pulls
