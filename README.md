@@ -39,7 +39,7 @@ gs-reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json
   - Required
   - Your GitHub repository name. (ex. `nnsnodnb/github-pr-slack-reminder`)
 - `--file-username` or `-u`
-  - Required 
+  - Optional
   - Corresponding files for GitHub and Slack usernames. (ex. `examples/username.json`)
     ```json
     [

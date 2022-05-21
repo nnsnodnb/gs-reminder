@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import click
 
@@ -10,7 +10,9 @@ from .github import api as github_api
 from .slack import api as slack_api
 
 
-def get_bridge_usernames(file_username: str) -> List[BridgeUsername]:
+def get_bridge_usernames(file_username: Optional[str]) -> List[BridgeUsername]:
+    if file_username is None:
+        return []
     return list(map(lambda item: BridgeUsername(**item), json.loads(Path(file_username).read_text())))
 
 
@@ -32,7 +34,6 @@ Required environments variables\n
     "-u",
     type=str,
     help="Corresponding files for GitHub and Slack usernames. (see. example in README.md)",
-    required=True,
 )
 @click.option(
     "--limit",
@@ -42,7 +43,7 @@ Required environments variables\n
     help="Number of Pull Requests to notify Slack.",
     required=True,
 )
-def main(repo: str, file_username: str, limit: int) -> None:
+def main(repo: str, file_username: Optional[str], limit: int) -> None:
     if limit > 20:
         raise ValueError("Cannot set more than 20 items.")
 
