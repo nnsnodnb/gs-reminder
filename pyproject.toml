@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "gs_reminder"
+name = "gs-reminder"
 version = "0.2.0"
 description = "Notify Slack of a review of Pull Requests in the GitHub repository."
 authors = ["Yuya Oka <nnsnodnb@gmail.com>"]
@@ -27,7 +27,7 @@ mypy = "^0.950"
 types-requests = "^2.27.25"
 
 [tool.poetry.scripts]
-gs_reminder = "gs_reminder.notifier:main"
+gs-reminder = "gs_reminder.notifier:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
