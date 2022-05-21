@@ -21,8 +21,8 @@ Required environments variables\n
     - SLACK_URL: Your Slack webhook url."""
 )
 @click.option(
-    "-r",
     "--repo",
+    "-r",
     type=str,
     help="GitHub repository name (owner/repo).",
     required=True,
