@@ -25,8 +25,7 @@ class PullRequest(object):
         self.locked = kwargs["locked"]
         self.title = kwargs["title"]
         self.user = User(**kwargs["user"])
-        if assignee := kwargs["assignee"]:
-            self.assignee = User(**assignee)
+        self.assignee = kwargs.get("assignee", [])
         self.requested_reviewers = list(map(lambda item: User(**item), kwargs["requested_reviewers"]))
         self.draft = kwargs["draft"]
 
