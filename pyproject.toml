@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gs-reminder"
-version = "0.2.0"
+version = "0.3.0"
 description = "Notify Slack of a review of Pull Requests in the GitHub repository."
 authors = ["Yuya Oka <nnsnodnb@gmail.com>"]
 license = "MIT"
@@ -8,6 +8,9 @@ readme = "README.md"
 repository = "https://github.com/nnsnodnb/github-pr-slack-reminder"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10"
 ]
 packages = [
