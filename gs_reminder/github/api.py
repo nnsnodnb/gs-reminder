@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 
 import requests
 
+from ..error import GitHubException
 from .models.pull_request import PullRequest
 
 GITHUB_API_BASE_URL = "https://api.github.com"
@@ -25,6 +26,8 @@ class Client:
         while True:
             res = requests.get(url=api_url, params=params, headers=headers)
             res_json = res.json()
+            if res.status_code != 200:
+                raise GitHubException(status_code=res.status_code, response=res_json, detail="get_pulls")
             if not res_json:
                 break
 
@@ -51,6 +54,8 @@ class Client:
         }
         res = requests.get(url=api_url, headers=headers)
         res_json = res.json()
+        if res.status_code != 200:
+            raise GitHubException(status_code=res.status_code, response=res_json, detail="get_total_pulls")
         total_count = res_json["total_count"]
 
         return total_count

@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 import requests
 
 from ..bridge import BridgeUsername
+from ..error import SlackException
 from ..github.models.pull_request import PullRequest
 from ..github.models.user import User
 
@@ -115,4 +116,6 @@ class Client:
             "blocks": self._build_block(repo=repo, pulls=pulls, total_pulls=total_pulls),
         }
 
-        requests.post(url=self._webhook_url, data=json.dumps(payload))
+        res = requests.post(url=self._webhook_url, data=json.dumps(payload))
+        if res.status_code != 200:
+            raise SlackException(status_code=res.status_code, response=res.json())
