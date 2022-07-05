@@ -1,11 +1,13 @@
 import json
 import os
+import sys
 from pathlib import Path
 from typing import List, Optional
 
 import click
 
 from .bridge import BridgeUsername
+from .error import SlackException
 from .github import api as github_api
 from .slack import api as slack_api
 
@@ -13,7 +15,12 @@ from .slack import api as slack_api
 def get_bridge_usernames(file_username: Optional[str]) -> List[BridgeUsername]:
     if file_username is None:
         return []
-    return list(map(lambda item: BridgeUsername(**item), json.loads(Path(file_username).read_text())))
+    return list(
+        map(
+            lambda item: BridgeUsername(**item),
+            json.loads(Path(file_username).read_text()),
+        )
+    )
 
 
 @click.command(
@@ -57,7 +64,11 @@ def main(repo: str, file_username: Optional[str], limit: int) -> None:
 
     # send slack
     sl = slack_api.Client(usernames=usernames)
-    sl.post(repo=repo, pulls=pulls, total_pulls=total_pulls)
+    try:
+        sl.post(repo=repo, pulls=pulls, total_pulls=total_pulls)
+    except SlackException as e:
+        print(f"Slack Exception {e.response['detail']}", end=" ")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

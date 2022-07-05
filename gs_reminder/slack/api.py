@@ -59,7 +59,10 @@ class Client:
                         "image_url": reviewer.avatar_url,
                         "alt_text": reviewer.login,
                     },
-                    {"type": "mrkdwn", "text": self._convert_github_to_slack(user=reviewer)},
+                    {
+                        "type": "mrkdwn",
+                        "text": self._convert_github_to_slack(user=reviewer),
+                    },
                 ]
         else:
             reviewer_section["elements"] += [{"type": "plain_text", "text": "Waiting review by anyone."}]
@@ -73,7 +76,10 @@ class Client:
         blocks = [
             {
                 "type": "section",
-                "text": {"type": "mrkdwn", "text": f"*Pending review on _<https://github.com/{repo}|{repo}>_*"},
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*Pending review on _<https://github.com/{repo}|{repo}>_*",
+                },
             },
         ]
 
@@ -118,4 +124,4 @@ class Client:
 
         res = requests.post(url=self._webhook_url, data=json.dumps(payload))
         if res.status_code != 200:
-            raise SlackException(status_code=res.status_code, response=res.json())
+            raise SlackException(status_code=res.status_code, content=res.content.decode("utf-8"))
