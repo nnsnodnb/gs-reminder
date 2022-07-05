@@ -50,7 +50,16 @@ Required environments variables\n
     help="Number of Pull Requests to notify Slack.",
     required=True,
 )
-def main(repo: str, file_username: Optional[str], limit: int) -> None:
+@click.option(
+    "--icon",
+    "-i",
+    is_flag=True,
+    type=bool,
+    default=False,
+    help="Give GitHub icons to Slack notifications.",
+    required=False,
+)
+def main(repo: str, file_username: Optional[str], limit: int, icon: bool) -> None:
     if limit > 20:
         raise ValueError("Cannot set more than 20 items.")
 
@@ -63,7 +72,7 @@ def main(repo: str, file_username: Optional[str], limit: int) -> None:
     usernames = get_bridge_usernames(file_username=file_username)
 
     # send slack
-    sl = slack_api.Client(usernames=usernames)
+    sl = slack_api.Client(usernames=usernames, icon=icon)
     try:
         sl.post(repo=repo, pulls=pulls, total_pulls=total_pulls)
     except SlackException as e:
