@@ -17,7 +17,12 @@ class Client:
 
     def get_pulls(self, repo: str, limit: int) -> List[PullRequest]:
         api_url = f"{GITHUB_API_BASE_URL}/repos/{repo}/pulls"
-        params: Dict[str, Any] = {"state": "open", "sort": "created", "per_page": 25, "page": 1}
+        params: Dict[str, Any] = {
+            "state": "open",
+            "sort": "created",
+            "per_page": 25,
+            "page": 1,
+        }
         headers = {
             "Authorization": f"bearer {self._github_token}",
             "Accept": "application/vnd.github.v3+json",
@@ -32,7 +37,10 @@ class Client:
                 break
 
             # filter not draft pull requests
-            items = filter(lambda item: not item.draft, map(lambda item: PullRequest(**item), res_json))
+            items = filter(
+                lambda item: not item.draft,
+                map(lambda item: PullRequest(**item), res_json),
+            )
             pulls += items
 
             if len(pulls) >= limit:
