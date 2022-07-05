@@ -20,7 +20,7 @@ Notify Slack of a review of Pull Requests in the GitHub repository.
 
 ```shell
 pip install gs-reminder
-gs-reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json
+gs-reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json --icon
 ```
 
 ### Environment variables
@@ -53,6 +53,10 @@ gs-reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json
 - `--limit` or `-l`
   - Optional
   - Number of Pull Requests to notify Slack. Max: 20 (default: 20)
+
+- `--icon` or `-i`
+  - Optional
+  - Give GitHub icons to Slack notifications.
 
 ## Example Result
 

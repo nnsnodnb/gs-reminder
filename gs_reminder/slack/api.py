@@ -13,10 +13,12 @@ from ..github.models.user import User
 class Client:
     _usernames: List[BridgeUsername]
     _webhook_url: str
+    _icon: bool
 
-    def __init__(self, usernames: List[BridgeUsername]) -> None:
+    def __init__(self, usernames: List[BridgeUsername], icon: bool) -> None:
         self._usernames = usernames
         self._webhook_url = os.environ["SLACK_URL"]
+        self._icon = icon
 
     def _convert_github_to_slack(self, user: User) -> str:
         for username in self._usernames:
@@ -52,17 +54,25 @@ class Client:
                     "text": "Waiting on",
                 },
             ]
-            for reviewer in pull.requested_reviewers:
+            if self._icon:
+                for reviewer in pull.requested_reviewers:
+                    reviewer_section["elements"] += [
+                        {
+                            "type": "image",
+                            "image_url": reviewer.avatar_url,
+                            "alt_text": reviewer.login,
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": self._convert_github_to_slack(user=reviewer),
+                        },
+                    ]
+            else:
                 reviewer_section["elements"] += [
                     {
-                        "type": "image",
-                        "image_url": reviewer.avatar_url,
-                        "alt_text": reviewer.login,
-                    },
-                    {
                         "type": "mrkdwn",
-                        "text": self._convert_github_to_slack(user=reviewer),
-                    },
+                        "text": " ".join(map(self._convert_github_to_slack, pull.requested_reviewers)),
+                    }
                 ]
         else:
             reviewer_section["elements"] += [{"type": "plain_text", "text": "Waiting review by anyone."}]
