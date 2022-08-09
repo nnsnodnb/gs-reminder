@@ -27,7 +27,7 @@ black = "^22.6.0"
 isort = "^5.10.1"
 flake8 = "^5.0.1"
 mypy = "^0.971"
-types-requests = "^2.28.6"
+types-requests = "^2.28.8"
 
 [tool.poetry.scripts]
 gs-reminder = "gs_reminder.notifier:main"
