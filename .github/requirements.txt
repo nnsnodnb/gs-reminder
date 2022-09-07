@@ -1,2 +1,1 @@
 poetry==1.1.15
-poetry-core==1.0.8
