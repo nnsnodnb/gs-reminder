@@ -23,7 +23,7 @@ jobs:
         python -m pip install -U pip
         pip install -r .github/requirements.txt
         poetry config virtualenvs.in-project true
-        poetry install --no-dev
+        poetry install --sync --without=dev
 
     - name: Send Test
       env:
