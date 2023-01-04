@@ -59,7 +59,16 @@ Required environments variables\n
     help="Give GitHub icons to Slack notifications.",
     required=False,
 )
-def main(repo: str, file_username: Optional[str], limit: int, icon: bool) -> None:
+@click.option(
+    "--exclude-users",
+    "-eu",
+    type=str,
+    default=[],
+    multiple=True,
+    help="GitHub users to remove from reviewers upon notification.",
+    required=False,
+)
+def main(repo: str, file_username: Optional[str], limit: int, icon: bool, exclude_users: [str]) -> None:
     if limit > 20:
         raise ValueError("Cannot set more than 20 items.")
 
@@ -72,7 +81,7 @@ def main(repo: str, file_username: Optional[str], limit: int, icon: bool) -> Non
     usernames = get_bridge_usernames(file_username=file_username)
 
     # send slack
-    sl = slack_api.Client(usernames=usernames, icon=icon)
+    sl = slack_api.Client(usernames=usernames, icon=icon, exclude_users=exclude_users)
     try:
         sl.post(repo=repo, pulls=pulls, total_pulls=total_pulls)
     except SlackException as e:

@@ -14,11 +14,13 @@ class Client:
     _usernames: List[BridgeUsername]
     _webhook_url: str
     _icon: bool
+    _exclude_users: [str]
 
-    def __init__(self, usernames: List[BridgeUsername], icon: bool) -> None:
+    def __init__(self, usernames: List[BridgeUsername], icon: bool, exclude_users: [str]) -> None:
         self._usernames = usernames
         self._webhook_url = os.environ["SLACK_URL"]
         self._icon = icon
+        self._exclude_users = exclude_users
 
     def _convert_github_to_slack(self, user: User) -> str:
         for username in self._usernames:
@@ -47,7 +49,8 @@ class Client:
 
         # reviewer section
         reviewer_section: Dict[str, Any] = {"type": "context", "elements": []}
-        if pull.requested_reviewers:
+        requested_reviewers = list(filter(lambda obj: obj.login not in self._exclude_users, pull.requested_reviewers))
+        if requested_reviewers:
             reviewer_section["elements"] += [
                 {
                     "type": "plain_text",
@@ -55,7 +58,7 @@ class Client:
                 },
             ]
             if self._icon:
-                for reviewer in pull.requested_reviewers:
+                for reviewer in requested_reviewers:
                     reviewer_section["elements"] += [
                         {
                             "type": "image",
@@ -71,7 +74,7 @@ class Client:
                 reviewer_section["elements"] += [
                     {
                         "type": "mrkdwn",
-                        "text": " ".join(map(self._convert_github_to_slack, pull.requested_reviewers)),
+                        "text": " ".join(map(self._convert_github_to_slack, requested_reviewers)),
                     }
                 ]
         else:

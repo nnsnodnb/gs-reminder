@@ -58,6 +58,13 @@ gs-reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json --ico
   - Optional
   - Give GitHub icons to Slack notifications.
 
+- `--exclude-users` or `-eu`
+  - Optional
+  - GitHub users to remove from reviewers upon notification.
+    ```
+    -eu nnsnodnb # this name is GitHub username
+    ```
+
 ## Example Result
 
 <img src="https://user-images.githubusercontent.com/9856514/168442310-af165e75-7329-4a37-8e67-3f2635c549ac.png" alt="example result" width="500px">
