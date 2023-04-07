@@ -9,6 +9,9 @@ class _AbstractException(Exception):
         self.status_code = status_code
         self.response = response
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}: {self.__dict__}"
+
 
 class GitHubException(_AbstractException):
     detail: str
