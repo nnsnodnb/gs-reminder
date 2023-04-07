@@ -1,6 +1,6 @@
-# github-pr-slack-reminder
+# gs-reminder
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/380a539992d941f0a6d9c045c48c580c)](https://www.codacy.com/gh/nnsnodnb/github-pr-slack-reminder/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nnsnodnb/github-pr-slack-reminder&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/380a539992d941f0a6d9c045c48c580c)](https://www.codacy.com/gh/nnsnodnb/gs-reminder/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nnsnodnb/gs-reminder&amp;utm_campaign=Badge_Grade)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 [![PyPI Package version](https://badge.fury.io/py/gs-reminder.svg)](https://pypi.org/project/gs-reminder)
@@ -20,7 +20,7 @@ Notify Slack of a review of Pull Requests in the GitHub repository.
 
 ```shell
 pip install gs-reminder
-gs-reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json --icon
+gs-reminder -r nnsnodnb/gs-reminder -u examples/username.json --icon
 ```
 
 ### Environment variables
@@ -37,7 +37,7 @@ gs-reminder -r nnsnodnb/github-pr-slack-reminder -u examples/username.json --ico
 
 - `--repo` or `-r`
   - Required
-  - Your GitHub repository name. (ex. `nnsnodnb/github-pr-slack-reminder`)
+  - Your GitHub repository name. (ex. `nnsnodnb/gs-reminder`)
 - `--file-username` or `-u`
   - Optional
   - Corresponding files for GitHub and Slack usernames. (ex. `examples/username.json`)
