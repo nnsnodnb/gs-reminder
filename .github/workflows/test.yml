@@ -3,12 +3,44 @@ name: Test
 on: [pull_request]
 
 jobs:
+  github-apps:
+    runs-on: ubuntu-latest
+
+    outputs:
+      token: ${{ steps.get-gethub-apps.outputs.token }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: Cyberbeni/install-swift-tool@v2
+      with:
+        url: https://github.com/nnsnodnb/github-apps-token-swift
+        version: '*'
+
+    - name: Configure access token for GitHub Apps
+      id: get-gethub-apps
+      env:
+        APP_ID: ${{ secrets.APP_ID }}
+        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        REPOSITORY: ${{ github.repository }}
+      run: |
+        echo "${PRIVATE_KEY}" > /tmp/github-apps-private-key.pem
+        token=$(github-apps-token create \
+                  -a "${APP_ID}" \
+                  -p /tmp/github-apps-private-key.pem \
+                  --owner nnsnodnb \
+                  -r "${REPOSITORY}" \
+                  --pull_requests read)
+        echo "token=${token}" >> "${GITHUB_OUTPUT}"
+        rm /tmp/github-apps-private-key.pem
+
   notify:
     runs-on: ubuntu-latest
+    needs: github-apps
 
     strategy:
       matrix:
-        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
+        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
 
     steps:
     - uses: actions/checkout@v3
@@ -27,7 +59,29 @@ jobs:
 
     - name: Send Test
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ needs.github-apps.outputs.token }}
         SLACK_URL: ${{ secrets.SLACK_URL }}
+        REPOSITORY: ${{ github.repository }}
       run: |
-        poetry run python -m gs_reminder -r ${{ github.repository }} -u ./examples/username.json
+        poetry run python -m gs_reminder -r "${REPOSITORY}" -u ./examples/username.json
+
+  revoke:
+    runs-on: ubuntu-latest
+    needs:
+    - github-apps
+    - notify
+    if: always()
+
+    steps:
+    - uses: Cyberbeni/install-swift-tool@v2
+      with:
+        url: https://github.com/nnsnodnb/github-apps-token-swift
+        version: '*'
+
+    - name: Revoke access token for GitHub Apps
+      env:
+        GITHUB_TOKEN: ${{ needs.github-apps.outputs.token }}
+      run: |
+        if [[ -n "${GITHUB_TOKEN}" ]]; then
+          github-apps-token revoke --token "${GITHUB_TOKEN}"
+        fi
