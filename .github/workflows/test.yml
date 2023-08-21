@@ -86,11 +86,6 @@ jobs:
     if: always()
 
     steps:
-    - uses: Cyberbeni/install-swift-tool@v2
-      with:
-        url: https://github.com/nnsnodnb/github-apps-token-swift
-        version: '*'
-
     - uses: cloudposse/github-action-secret-outputs@main
       id: token-decode
       with:
@@ -103,6 +98,12 @@ jobs:
         GITHUB_TOKEN: ${{ steps.token-decode.outputs.out }}
       run: |
         if [[ -n "${GITHUB_TOKEN}" ]]; then
-          github-apps-token revoke --token "${GITHUB_TOKEN}"
+          curl -L \
+            -X DELETE \
+            --fail-with-body \
+            "https://api.github.com/installation/token" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28"
           echo "Revoked token"
         fi
