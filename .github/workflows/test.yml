@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      token: ${{ steps.get-github-apps.outputs.token }}
+      access_token: ${{ steps.get-github-apps.outputs.token }}
 
     steps:
     - uses: actions/checkout@v3
@@ -57,11 +57,9 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --sync --without=dev
 
-    - name: Set GITHUB_TOKEN
-      run: echo "GITHUB_TOKEN=${{ needs.github-apps.outputs.token }}" >> "${GITHUB_ENV}"
-
     - name: Send Test
       env:
+        GITHUB_TOKEN: ${{ needs.github-apps.outputs.access_token }}
         SLACK_URL: ${{ secrets.SLACK_URL }}
         REPOSITORY: ${{ github.repository }}
       run: |
@@ -81,8 +79,10 @@ jobs:
         version: '*'
 
     - name: Revoke access token for GitHub Apps
+      env:
+        GITHUB_TOKEN: ${{ needs.github-apps.outputs.access_token }}
       run: |
-        if [[ -n "${{ needs.github-apps.outputs.token }}" ]]; then
-          github-apps-token revoke --token "${{ needs.github-apps.outputs.token }}"
+        if [[ -n "${GITHUB_TOKEN}" ]]; then
+          github-apps-token revoke --token "${GITHUB_TOKEN}"
           echo "Revoked token"
         fi
