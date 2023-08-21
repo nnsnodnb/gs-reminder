@@ -18,7 +18,7 @@ jobs:
         version: '*'
 
     - name: Configure access token for GitHub Apps
-      id: get-gethub-apps
+      id: get-github-apps
       env:
         APP_ID: ${{ secrets.APP_ID }}
         PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
