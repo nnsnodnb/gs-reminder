@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      access_token: ${{ steps.get-github-apps.outputs.token }}
+      access_token: ${{ steps.token-encode.outputs.out }}
 
     steps:
     - uses: actions/checkout@v3
@@ -31,8 +31,14 @@ jobs:
                   -r gs-reminder \
                   --pull_requests read)
         echo "token=${token}" >> "${GITHUB_OUTPUT}"
-        echo "token: ${token}"
         rm /tmp/github-apps-private-key.pem
+
+    - uses: cloudposse/github-action-secret-outputs@main
+      id: token-encode
+      with:
+        secret: ${{ secrets.SECRET_PASSPHRASE }}
+        op: encode
+        in: ${{ steps.get-github-apps.outputs.token }}
 
   notify:
     runs-on: ubuntu-latest
@@ -57,9 +63,16 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --sync --without=dev
 
+    - uses: cloudposse/github-action-secret-outputs@main
+      id: token-decode
+      with:
+        secret: ${{ secrets.SECRET_PASSPHRASE }}
+        op: decode
+        in: ${{ needs.github-apps.outputs.access_token }}
+
     - name: Send Test
       env:
-        GITHUB_TOKEN: ${{ needs.github-apps.outputs.access_token }}
+        GITHUB_TOKEN: ${{ steps.token-decode.outputs.out }}
         SLACK_URL: ${{ secrets.SLACK_URL }}
         REPOSITORY: ${{ github.repository }}
       run: |
@@ -78,9 +91,16 @@ jobs:
         url: https://github.com/nnsnodnb/github-apps-token-swift
         version: '*'
 
+    - uses: cloudposse/github-action-secret-outputs@main
+      id: token-decode
+      with:
+        secret: ${{ secrets.SECRET_PASSPHRASE }}
+        op: decode
+        in: ${{ needs.github-apps.outputs.access_token }}
+
     - name: Revoke access token for GitHub Apps
       env:
-        GITHUB_TOKEN: ${{ needs.github-apps.outputs.access_token }}
+        GITHUB_TOKEN: ${{ steps.token-decode.outputs.out }}
       run: |
         if [[ -n "${GITHUB_TOKEN}" ]]; then
           github-apps-token revoke --token "${GITHUB_TOKEN}"
