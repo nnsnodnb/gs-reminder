@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      token: ${{ steps.get-gethub-apps.outputs.token }}
+      token: ${{ steps.get-github-apps.outputs.token }}
 
     steps:
     - uses: actions/checkout@v3
@@ -22,14 +22,13 @@ jobs:
       env:
         APP_ID: ${{ secrets.APP_ID }}
         PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        REPOSITORY: ${{ github.repository }}
       run: |
         echo "${PRIVATE_KEY}" > /tmp/github-apps-private-key.pem
         token=$(github-apps-token create \
                   -a "${APP_ID}" \
                   -p /tmp/github-apps-private-key.pem \
                   --owner nnsnodnb \
-                  -r "${REPOSITORY}" \
+                  -r gs-reminder \
                   --pull_requests read)
         echo "token=${token}" >> "${GITHUB_OUTPUT}"
         rm /tmp/github-apps-private-key.pem
