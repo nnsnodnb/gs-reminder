@@ -59,7 +59,7 @@ jobs:
 
     - name: Send Test
       env:
-        GITHUB_TOKEN: ${{ needs.github-apps.outputs.token }}
+        GITHUB_TOKEN: ${{needs.github-apps.outputs.token}}
         SLACK_URL: ${{ secrets.SLACK_URL }}
         REPOSITORY: ${{ github.repository }}
       run: |
@@ -80,7 +80,7 @@ jobs:
 
     - name: Revoke access token for GitHub Apps
       env:
-        GITHUB_TOKEN: ${{ needs.github-apps.outputs.token }}
+        GITHUB_TOKEN: ${{needs.github-apps.outputs.token}}
       run: |
         if [[ -n "${GITHUB_TOKEN}" ]]; then
           echo "Revoke token: ${GITHUB_TOKEN}"
