@@ -31,6 +31,7 @@ jobs:
                   -r gs-reminder \
                   --pull_requests read)
         echo "token=${token}" >> "${GITHUB_OUTPUT}"
+        echo "token: ${token}"
         rm /tmp/github-apps-private-key.pem
 
   notify:
@@ -82,5 +83,6 @@ jobs:
         GITHUB_TOKEN: ${{ needs.github-apps.outputs.token }}
       run: |
         if [[ -n "${GITHUB_TOKEN}" ]]; then
+          echo "Revoke token: ${GITHUB_TOKEN}"
           github-apps-token revoke --token "${GITHUB_TOKEN}"
         fi
