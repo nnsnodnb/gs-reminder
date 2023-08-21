@@ -57,9 +57,11 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --sync --without=dev
 
+    - name: Set GITHUB_TOKEN
+      run: echo "GITHUB_TOKEN=${{ needs.github-apps.outputs.token }}" >> "${GITHUB_ENV}"
+
     - name: Send Test
       env:
-        GITHUB_TOKEN: ${{needs.github-apps.outputs.token}}
         SLACK_URL: ${{ secrets.SLACK_URL }}
         REPOSITORY: ${{ github.repository }}
       run: |
@@ -79,10 +81,8 @@ jobs:
         version: '*'
 
     - name: Revoke access token for GitHub Apps
-      env:
-        GITHUB_TOKEN: ${{needs.github-apps.outputs.token}}
       run: |
-        if [[ -n "${GITHUB_TOKEN}" ]]; then
-          echo "Revoke token: ${GITHUB_TOKEN}"
-          github-apps-token revoke --token "${GITHUB_TOKEN}"
+        if [[ -n "${{ needs.github-apps.outputs.token }}" ]]; then
+          github-apps-token revoke --token "${{ needs.github-apps.outputs.token }}"
+          echo "Revoked token"
         fi
