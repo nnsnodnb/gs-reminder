@@ -21,7 +21,7 @@ jobs:
         repositories: gs-reminder
         skip-token-revoke: true
 
-    - uses: cloudposse/github-action-secret-outputs@main
+    - uses: cloudposse/github-action-secret-outputs@0.1.1
       id: token-encode
       with:
         secret: ${{ secrets.SECRET_PASSPHRASE }}
@@ -51,7 +51,7 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --sync --without=dev
 
-    - uses: cloudposse/github-action-secret-outputs@main
+    - uses: cloudposse/github-action-secret-outputs@0.1.1
       id: token-decode
       with:
         secret: ${{ secrets.SECRET_PASSPHRASE }}
@@ -74,7 +74,7 @@ jobs:
     if: always()
 
     steps:
-    - uses: cloudposse/github-action-secret-outputs@main
+    - uses: cloudposse/github-action-secret-outputs@0.1.1
       id: token-decode
       with:
         secret: ${{ secrets.SECRET_PASSPHRASE }}
