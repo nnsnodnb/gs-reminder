@@ -12,26 +12,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: Cyberbeni/install-swift-tool@v2
-      with:
-        url: https://github.com/nnsnodnb/github-apps-token-swift
-        version: '*'
-
-    - name: Configure access token for GitHub Apps
+    - uses: actions/create-github-app-token@v1
       id: get-github-apps
-      env:
-        APP_ID: ${{ secrets.APP_ID }}
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      run: |
-        echo "${PRIVATE_KEY}" > /tmp/github-apps-private-key.pem
-        token=$(github-apps-token create \
-                  -a "${APP_ID}" \
-                  -p /tmp/github-apps-private-key.pem \
-                  --owner nnsnodnb \
-                  -r gs-reminder \
-                  --pull_requests read)
-        echo "token=${token}" >> "${GITHUB_OUTPUT}"
-        rm /tmp/github-apps-private-key.pem
+      with:
+        app-id: ${{ secrets.APP_ID }}
+        private-key: ${{ secrets.PRIVATE_KEY }}
+        owner: nnsnodnb
+        repositories: gs-reminder
+        skip-token-revoke: true
 
     - uses: cloudposse/github-action-secret-outputs@main
       id: token-encode
