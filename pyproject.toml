@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gs-reminder"
-version = "0.5.0"
+version = "0.0.0" # replacing poetry-dynamic-versioning
 description = "Notify Slack of a review of Pull Requests in the GitHub repository."
 authors = ["Yuya Oka <nnsnodnb@gmail.com>"]
 license = "MIT"
@@ -33,9 +33,14 @@ types-requests = "^2.28.11"
 [tool.poetry.scripts]
 gs-reminder = "gs_reminder.notifier:main"
 
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
+
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.4.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.black]
 line-length = 120

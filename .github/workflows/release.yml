@@ -23,6 +23,7 @@ jobs:
         pip install -r .github/requirements.txt
         poetry config virtualenvs.in-project true
         poetry run pip install -U setuptools pip
+        poetry self add "poetry-dynamic-versioning[plugin]"
 
     - name: Build & Publish to PyPI
       env:
