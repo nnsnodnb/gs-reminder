@@ -68,8 +68,6 @@ class Client:
             res.raise_for_status()
         except HTTPError as e:
             raise GitHubException(status_code=e.response.status_code, response=res_json, detail="get_total_pulls")
-        if res.status_code != 200:
-            raise GitHubException(status_code=res.status_code, response=res_json, detail="get_total_pulls")
         total_count = res_json["total_count"]
 
         return total_count
