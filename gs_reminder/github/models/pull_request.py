@@ -12,7 +12,7 @@ class PullRequest(object):
     locked: bool
     title: str
     user: User
-    assignee: User
+    assignees: List[User]
     requested_reviewers: List[User]
     draft: Optional[bool]
 
@@ -25,7 +25,7 @@ class PullRequest(object):
         self.locked = kwargs["locked"]
         self.title = kwargs["title"]
         self.user = User(**kwargs["user"])
-        self.assignee = kwargs.get("assignee", [])
+        self.assignees = list(map(lambda item: User(**item), kwargs.get("assignees", [])))
         self.requested_reviewers = list(map(lambda item: User(**item), kwargs["requested_reviewers"]))
         self.draft = kwargs["draft"]
 

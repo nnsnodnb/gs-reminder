@@ -2,6 +2,7 @@ import urllib.parse
 from typing import Any, Dict, List
 
 import requests
+from requests.exceptions import HTTPError
 
 from ..error import GitHubException
 from .models.pull_request import PullRequest
@@ -31,8 +32,10 @@ class Client:
         while True:
             res = requests.get(url=api_url, params=params, headers=headers)
             res_json = res.json()
-            if res.status_code != 200:
-                raise GitHubException(status_code=res.status_code, response=res_json, detail="get_pulls")
+            try:
+                res.raise_for_status()
+            except HTTPError as e:
+                raise GitHubException(status_code=e.response.status_code, response=res_json, detail="get_pulls")
             if not res_json:
                 break
 
@@ -62,6 +65,10 @@ class Client:
         }
         res = requests.get(url=api_url, headers=headers)
         res_json = res.json()
+        try:
+            res.raise_for_status()
+        except HTTPError as e:
+            raise GitHubException(status_code=e.response.status_code, response=res_json, detail="get_total_pulls")
         if res.status_code != 200:
             raise GitHubException(status_code=res.status_code, response=res_json, detail="get_total_pulls")
         total_count = res_json["total_count"]
