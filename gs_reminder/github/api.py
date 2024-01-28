@@ -1,4 +1,5 @@
 import urllib.parse
+from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
 import requests
@@ -10,11 +11,9 @@ from .models.pull_request import PullRequest
 GITHUB_API_BASE_URL = "https://api.github.com"
 
 
+@dataclass(frozen=True)
 class Client:
-    _github_token: str
-
-    def __init__(self, token: str) -> None:
-        self._github_token = token
+    github_token: str = field(repr=False, compare=False)
 
     def get_pulls(self, repo: str, limit: int) -> List[PullRequest]:
         api_url = f"{GITHUB_API_BASE_URL}/repos/{repo}/pulls"
@@ -25,7 +24,7 @@ class Client:
             "page": 1,
         }
         headers = {
-            "Authorization": f"bearer {self._github_token}",
+            "Authorization": f"bearer {self.github_token}",
             "Accept": "application/vnd.github.v3+json",
         }
         pulls: List[PullRequest] = []
@@ -60,7 +59,7 @@ class Client:
             f"{GITHUB_API_BASE_URL}/search/issues?q={urllib.parse.quote(f'type:pr repo:{repo} state:open')}&per_page=1"
         )
         headers = {
-            "Authorization": f"bearer {self._github_token}",
+            "Authorization": f"bearer {self.github_token}",
             "Accept": "application/vnd.github.v3.text-match+json",
         }
         res = requests.get(url=api_url, headers=headers)
