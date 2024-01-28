@@ -74,7 +74,7 @@ def main(repo: str, file_username: Optional[str], limit: int, icon: bool, exclud
     if limit > 20:
         raise ValueError("Cannot set more than 20 items.")
 
-    gh = github_api.Client(token=os.environ["GITHUB_TOKEN"])
+    gh = github_api.Client(github_token=os.environ["GITHUB_TOKEN"])
     # get pull requests
     pulls = gh.get_pulls(repo=repo, limit=limit)
     # get total pull requests count
