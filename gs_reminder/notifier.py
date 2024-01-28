@@ -6,6 +6,7 @@ from typing import List, Optional
 
 import click
 
+from . import __version__
 from .bridge import BridgeUsername
 from .error import SlackException
 from .github import api as github_api
@@ -23,6 +24,7 @@ def get_bridge_usernames(file_username: Optional[str]) -> List[BridgeUsername]:
     )
 
 
+@click.version_option(version=__version__)
 @click.command(
     help="""GitHub repository's pull requests slack notifier\n
 Required environments variables\n
