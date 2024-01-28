@@ -50,6 +50,7 @@ jobs:
         pip install -r .github/requirements.txt
         poetry config virtualenvs.in-project true
         poetry install --sync --without=dev
+        poetry self add "poetry-dynamic-versioning[plugin]"
 
     - uses: cloudposse/github-action-secret-outputs@0.1.1
       id: token-decode
