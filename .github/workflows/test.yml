@@ -3,11 +3,8 @@ name: Test
 on: [pull_request]
 
 jobs:
-  github-apps:
+  notify:
     runs-on: ubuntu-latest
-
-    outputs:
-      access_token: ${{ steps.token-encode.outputs.out }}
 
     steps:
     - uses: actions/checkout@v4
@@ -19,30 +16,11 @@ jobs:
         private-key: ${{ secrets.PRIVATE_KEY }}
         owner: nnsnodnb
         repositories: gs-reminder
-        skip-token-revoke: true
-
-    - uses: cloudposse/github-action-secret-outputs@0.1.1
-      id: token-encode
-      with:
-        secret: ${{ secrets.SECRET_PASSPHRASE }}
-        op: encode
-        in: ${{ steps.get-github-apps.outputs.token }}
-
-  notify:
-    runs-on: ubuntu-latest
-    needs: github-apps
-
-    strategy:
-      matrix:
-        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
-
-    steps:
-    - uses: actions/checkout@v4
 
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.12"
 
     - name: Install Dependencies
       run: |
@@ -52,50 +30,13 @@ jobs:
         poetry install --sync --without=dev
         poetry self add "poetry-dynamic-versioning[plugin]"
 
-    - uses: cloudposse/github-action-secret-outputs@0.1.1
-      id: token-decode
-      with:
-        secret: ${{ secrets.SECRET_PASSPHRASE }}
-        op: decode
-        in: ${{ needs.github-apps.outputs.access_token }}
-
     - name: Send Test
       env:
-        GITHUB_TOKEN: ${{ steps.token-decode.outputs.out }}
+        GITHUB_TOKEN: ${{ steps.get-github-apps.outputs.token }}
         SLACK_URL: ${{ secrets.SLACK_URL }}
         REPOSITORY: ${{ github.repository }}
       run: |
         poetry run python -m gs_reminder -r "${REPOSITORY}" -u ./examples/username.json
-
-  revoke:
-    runs-on: ubuntu-latest
-    needs:
-    - github-apps
-    - notify
-    if: always()
-
-    steps:
-    - uses: cloudposse/github-action-secret-outputs@0.1.1
-      id: token-decode
-      with:
-        secret: ${{ secrets.SECRET_PASSPHRASE }}
-        op: decode
-        in: ${{ needs.github-apps.outputs.access_token }}
-
-    - name: Revoke access token for GitHub Apps
-      env:
-        GITHUB_TOKEN: ${{ steps.token-decode.outputs.out }}
-      run: |
-        if [[ -n "${GITHUB_TOKEN}" ]]; then
-          curl -L \
-            -X DELETE \
-            --fail-with-body \
-            "https://api.github.com/installation/token" \
-            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28"
-          echo "Revoked token"
-        fi
 
   tests:
     runs-on: ubuntu-latest
