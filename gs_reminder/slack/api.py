@@ -1,8 +1,10 @@
 import json
 import os
+from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
 import requests
+from requests.exceptions import HTTPError
 
 from ..bridge import BridgeUsername
 from ..error import SlackException
@@ -10,20 +12,15 @@ from ..github.models.pull_request import PullRequest
 from ..github.models.user import User
 
 
+@dataclass(frozen=True)
 class Client:
-    _usernames: List[BridgeUsername]
-    _webhook_url: str
-    _icon: bool
-    _exclude_users: [str]
-
-    def __init__(self, usernames: List[BridgeUsername], icon: bool, exclude_users: [str]) -> None:
-        self._usernames = usernames
-        self._webhook_url = os.environ["SLACK_URL"]
-        self._icon = icon
-        self._exclude_users = exclude_users
+    usernames: List[BridgeUsername]
+    icon: bool
+    exclude_users: [str]
+    _webhook_url: str = field(init=False, default_factory=lambda: os.environ["SLACK_URL"])
 
     def _convert_github_to_slack(self, user: User) -> str:
-        for username in self._usernames:
+        for username in self.usernames:
             if username.github == user.login:
                 return username.slack
         else:
@@ -49,7 +46,7 @@ class Client:
 
         # reviewer section
         reviewer_section: Dict[str, Any] = {"type": "context", "elements": []}
-        requested_reviewers = list(filter(lambda obj: obj.login not in self._exclude_users, pull.requested_reviewers))
+        requested_reviewers = list(filter(lambda obj: obj.login not in self.exclude_users, pull.requested_reviewers))
         if requested_reviewers:
             reviewer_section["elements"] += [
                 {
@@ -57,7 +54,7 @@ class Client:
                     "text": "Waiting on",
                 },
             ]
-            if self._icon:
+            if self.icon:
                 for reviewer in requested_reviewers:
                     reviewer_section["elements"] += [
                         {
@@ -136,5 +133,7 @@ class Client:
         }
 
         res = requests.post(url=self._webhook_url, data=json.dumps(payload))
-        if res.status_code != 200:
+        try:
+            res.raise_for_status()
+        except HTTPError:
             raise SlackException(status_code=res.status_code, content=res.content.decode("utf-8"))

@@ -1,10 +1,12 @@
 from typing import List, Optional
 
+from pydantic import BaseModel, Field
+
 from .user import User
 
 
-class PullRequest(object):
-    pr_id: int
+class PullRequest(BaseModel):
+    pr_id: int = Field(alias="id")
     node_id: str
     html_url: str
     number: int
@@ -12,22 +14,9 @@ class PullRequest(object):
     locked: bool
     title: str
     user: User
-    assignee: User
-    requested_reviewers: List[User]
+    assignees: List[User] = Field(default_factory=lambda: list)
+    requested_reviewers: List[User] = Field(default_factory=lambda: list)
     draft: Optional[bool]
-
-    def __init__(self, **kwargs) -> None:
-        self.pr_id = kwargs["id"]
-        self.node_id = kwargs["node_id"]
-        self.html_url = kwargs["html_url"]
-        self.number = kwargs["number"]
-        self.state = kwargs["state"]
-        self.locked = kwargs["locked"]
-        self.title = kwargs["title"]
-        self.user = User(**kwargs["user"])
-        self.assignee = kwargs.get("assignee", [])
-        self.requested_reviewers = list(map(lambda item: User(**item), kwargs["requested_reviewers"]))
-        self.draft = kwargs["draft"]
 
     def __str__(self) -> str:
         title = f"Pull Request [#{self.number}] {self.title} from {str(self.user)}"

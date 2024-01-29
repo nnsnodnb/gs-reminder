@@ -1,14 +1,11 @@
-class User(object):
-    login: str
-    user_id: int
-    user_type: str
-    avatar_url: str
+from pydantic import BaseModel, Field
 
-    def __init__(self, **kwargs) -> None:
-        self.login = kwargs["login"]
-        self.user_id = kwargs["id"]
-        self.user_type = kwargs["type"]
-        self.avatar_url = kwargs["avatar_url"]
+
+class User(BaseModel):
+    login: str
+    user_id: int = Field(alias="id")
+    user_type: str = Field(alias="type")
+    avatar_url: str
 
     def __str__(self) -> str:
         user = f"@{self.login}"
