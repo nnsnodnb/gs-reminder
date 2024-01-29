@@ -8,7 +8,7 @@ from gs_reminder.github.api import GITHUB_API_BASE_URL
 
 
 def test_success_get_pulls(requests_mock, github_api_client):
-    res_path = Path(__file__).parent / "mock_res" / "pulls.json"
+    res_path = Path(__file__).parents[2] / "mock_res" / "pulls.json"
     mock_json = json.loads(res_path.read_text())
     requests_mock.get(f"{GITHUB_API_BASE_URL}/repos/username/repo/pulls", json=mock_json, status_code=200)
 
@@ -29,10 +29,10 @@ def test_success_get_pulls(requests_mock, github_api_client):
     ids=["Not Found", "Validation Failed", "Internal Server Error"],
 )
 def test_failure_get_pulls(requests_mock, github_api_client, status_code, response):
-    requests_mock.get(f"{GITHUB_API_BASE_URL}/repos/username/repo/pulls", json=response, status_code=status_code)
+    requests_mock.get(f"{GITHUB_API_BASE_URL}/repos/nnsnodnb/gs-reminder/pulls", json=response, status_code=status_code)
 
     with pytest.raises(GitHubException) as e:
-        github_api_client.get_pulls(repo="username/repo", limit=1)
+        github_api_client.get_pulls(repo="nnsnodnb/gs-reminder", limit=1)
 
     assert requests_mock.called
     assert e.value.status_code == status_code
@@ -41,11 +41,11 @@ def test_failure_get_pulls(requests_mock, github_api_client, status_code, respon
 
 
 def test_success_get_total_pulls(requests_mock, github_api_client):
-    res_path = Path(__file__).parent / "mock_res" / "search_issues.json"
+    res_path = Path(__file__).parents[2] / "mock_res" / "search_issues.json"
     mock_json = json.loads(res_path.read_text())
     requests_mock.get(f"{GITHUB_API_BASE_URL}/search/issues", json=mock_json, status_code=200)
 
-    res = github_api_client.get_total_pulls(repo="username/repo")
+    res = github_api_client.get_total_pulls(repo="nnsnodnb/gs-reminder")
 
     assert requests_mock.called
     assert isinstance(res, int)
@@ -65,7 +65,7 @@ def test_failure_get_total_pulls(requests_mock, github_api_client, status_code, 
     requests_mock.get(f"{GITHUB_API_BASE_URL}/search/issues", json=response, status_code=status_code)
 
     with pytest.raises(GitHubException) as e:
-        github_api_client.get_total_pulls(repo="username/repo")
+        github_api_client.get_total_pulls(repo="nnsnodnb/gs-reminder")
 
     assert requests_mock.called
     assert e.value.status_code == status_code
