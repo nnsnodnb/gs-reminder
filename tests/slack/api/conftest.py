@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import List
+from typing import Generator, List
 
 import pytest
 
@@ -10,7 +10,7 @@ from gs_reminder.github.models.pull_request import PullRequest
 
 
 @pytest.fixture(scope="session", autouse=True)
-def slack_url() -> None:
+def slack_url() -> Generator:
     os.environ["SLACK_URL"] = "https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC"
     yield
     del os.environ["SLACK_URL"]
