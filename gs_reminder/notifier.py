@@ -70,7 +70,7 @@ Required environments variables\n
     help="GitHub users to remove from reviewers upon notification.",
     required=False,
 )
-def main(repo: str, file_username: Optional[str], limit: int, icon: bool, exclude_users: [str]) -> None:
+def main(repo: str, file_username: Optional[str], limit: int, icon: bool, exclude_users: List[str]) -> None:
     if limit > 20:
         raise ValueError("Cannot set more than 20 items.")
 

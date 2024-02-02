@@ -16,7 +16,7 @@ from ..github.models.user import User
 class Client:
     usernames: List[BridgeUsername]
     icon: bool
-    exclude_users: [str]
+    exclude_users: List[str]
     _webhook_url: str = field(init=False, default_factory=lambda: os.environ["SLACK_URL"])
 
     def _convert_github_to_slack(self, user: User) -> str:
