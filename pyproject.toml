@@ -8,7 +8,6 @@ readme = "README.md"
 repository = "https://github.com/nnsnodnb/gs-reminder"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -20,7 +19,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.14"
+python = ">=3.9,<3.14"
 requests = "^2.32.3"
 click = "^8.1.3"
 pydantic = ">=2.9.2"
