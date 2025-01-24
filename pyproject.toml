@@ -1,8 +1,9 @@
-[tool.poetry]
+[project]
 name = "gs-reminder"
-version = "0.0.0" # replacing poetry-dynamic-versioning
 description = "Notify Slack of a review of Pull Requests in the GitHub repository."
-authors = ["Yuya Oka <nnsnodnb@gmail.com>"]
+authors = [
+    { name = "nnsnodnb", email = "nnsnodnb@gmail.com" }
+]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/nnsnodnb/gs-reminder"
@@ -14,9 +15,13 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
+dynamic = ["version"]
+
+[tool.poetry]
 packages = [
     { include = "gs_reminder" }
 ]
+version = "0.0.0" # replacing poetry-dynamic-versioning
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.14"

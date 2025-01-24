@@ -67,7 +67,7 @@ jobs:
         cache: "poetry"
 
     - name: Install dependencies
-      run: poetry install --sync --with dev --no-root
+      run: poetry sync --no-root
 
     - name: mypy
       uses: tsuyoshicho/action-mypy@v5
