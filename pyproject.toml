@@ -31,7 +31,7 @@ pydantic = ">=2.9.2"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=22.12,<26.0"
-isort = "^6.0.1"
+isort = "^6.1.0"
 flake8 = ">=5.0.4,<8.0.0"
 mypy = ">=0.991,<1.19"
 types-requests = "^2.32.4"
