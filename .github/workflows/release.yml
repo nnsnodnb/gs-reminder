@@ -8,13 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: PyPI
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
 
     - name: Setup Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
       with:
         python-version: "3.12"
 
@@ -26,9 +25,31 @@ jobs:
         poetry run pip install -U setuptools pip
         poetry self add "poetry-dynamic-versioning[plugin]"
 
-    - name: Build & Publish to PyPI
-      env:
-        API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        poetry config pypi-token.pypi ${API_TOKEN}
-        poetry publish --build
+    - name: Build package
+      run: poetry build
+
+    - name: Upload distribution
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      with:
+        name: gs-reminder
+        path: dist/
+
+  publish:
+    runs-on: ubuntu-latest
+    environment: PyPI
+
+    needs:
+    - build
+
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Retrieve release distributions
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      with:
+        name: gs-reminder
+        path: dist/
+
+    - name: Publish release distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0

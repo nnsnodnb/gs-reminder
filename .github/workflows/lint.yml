@@ -11,15 +11,15 @@ jobs:
         python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
 
     - name: Setup Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: black
-      uses: reviewdog/action-black@v3
+      uses: reviewdog/action-black@644053a260402bc4278a865906107bd8aef7fae8 # v3.22.4
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
@@ -33,15 +33,15 @@ jobs:
         python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
 
     - name: Setup Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: flake8
-      uses: reviewdog/action-flake8@v3
+      uses: reviewdog/action-flake8@b65981e158319f08cb7d0132f28bc0081e110adc # v3.15.2
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
@@ -55,13 +55,13 @@ jobs:
         python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
 
     - name: Install poetry
       run: pipx install poetry
 
     - name: Set up Python environment
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
       with:
         python-version: ${{ matrix.python-version }}
         cache: "poetry"
@@ -70,7 +70,7 @@ jobs:
       run: poetry sync --no-root
 
     - name: mypy
-      uses: tsuyoshicho/action-mypy@v5
+      uses: tsuyoshicho/action-mypy@089e02ea49b666337a91bd665d8af1d6dd5dadce # v5.1.1
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
@@ -85,24 +85,24 @@ jobs:
         python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
 
     - name: Setup Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: isort
-      uses: isort/isort-action@master
+      uses: isort/isort-action@24d8a7a51d33ca7f36c3f23598dafa33f7071326 # v1.1.1
 
   actionlint:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
 
     - name: actionlint
-      uses: reviewdog/action-actionlint@v1
+      uses: reviewdog/action-actionlint@83e4ed25b168066ad8f62f5afbb29ebd8641d982 # v1.69.1
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
