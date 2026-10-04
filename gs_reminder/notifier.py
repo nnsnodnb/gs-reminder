@@ -2,7 +2,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import click
 
@@ -13,15 +13,10 @@ from .github import api as github_api
 from .slack import api as slack_api
 
 
-def get_bridge_usernames(file_username: Optional[str]) -> List[BridgeUsername]:
+def get_bridge_usernames(file_username: Optional[str]) -> list[BridgeUsername]:
     if file_username is None:
         return []
-    return list(
-        map(
-            lambda item: BridgeUsername(**item),
-            json.loads(Path(file_username).read_text()),
-        )
-    )
+    return [BridgeUsername(**item) for item in json.loads(Path(file_username).read_text())]
 
 
 @click.version_option(version=__version__)
@@ -70,7 +65,7 @@ Required environments variables\n
     help="GitHub users to remove from reviewers upon notification.",
     required=False,
 )
-def main(repo: str, file_username: Optional[str], limit: int, icon: bool, exclude_users: List[str]) -> None:
+def main(repo: str, file_username: Optional[str], limit: int, icon: bool, exclude_users: list[str]) -> None:
     if limit > 20:
         raise ValueError("Cannot set more than 20 items.")
 

@@ -1,7 +1,7 @@
 import json
 import os
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any
 
 import requests
 from requests.exceptions import HTTPError
@@ -14,9 +14,9 @@ from ..github.models.user import User
 
 @dataclass(frozen=True)
 class Client:
-    usernames: List[BridgeUsername]
+    usernames: list[BridgeUsername]
     icon: bool
-    exclude_users: List[str]
+    exclude_users: list[str]
     _webhook_url: str = field(init=False, default_factory=lambda: os.environ["SLACK_URL"])
 
     def _convert_github_to_slack(self, user: User) -> str:
@@ -26,9 +26,9 @@ class Client:
         else:
             return user.login
 
-    def _get_section(self, pull: PullRequest) -> List[Dict[str, Any]]:
+    def _get_section(self, pull: PullRequest) -> list[dict[str, Any]]:
         # title section
-        title_section: Dict[str, Any] = {
+        title_section: dict[str, Any] = {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
@@ -45,7 +45,7 @@ class Client:
         }
 
         # reviewer section
-        reviewer_section: Dict[str, Any] = {"type": "context", "elements": []}
+        reviewer_section: dict[str, Any] = {"type": "context", "elements": []}
         requested_reviewers = list(filter(lambda obj: obj.login not in self.exclude_users, pull.requested_reviewers))
         if requested_reviewers:
             reviewer_section["elements"] += [
@@ -82,7 +82,7 @@ class Client:
             reviewer_section,
         ]
 
-    def _build_block(self, repo: str, pulls: List[PullRequest], total_pulls: int) -> List[Dict[str, Any]]:
+    def _build_block(self, repo: str, pulls: list[PullRequest], total_pulls: int) -> list[dict[str, Any]]:
         blocks = [
             {
                 "type": "section",
@@ -93,7 +93,7 @@ class Client:
             },
         ]
 
-        for section in map(lambda pull: self._get_section(pull=pull), pulls):
+        for section in (self._get_section(pull) for pull in pulls):
             blocks += section
 
         if len(pulls) < total_pulls:
@@ -123,11 +123,11 @@ class Client:
 
         return blocks
 
-    def post(self, repo: str, pulls: List[PullRequest], total_pulls: int) -> None:
+    def post(self, repo: str, pulls: list[PullRequest], total_pulls: int) -> None:
         if not pulls:
             return
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "text": f"Waiting your review on {repo}.",
             "blocks": self._build_block(repo=repo, pulls=pulls, total_pulls=total_pulls),
         }
@@ -135,5 +135,5 @@ class Client:
         res = requests.post(url=self._webhook_url, data=json.dumps(payload))
         try:
             res.raise_for_status()
-        except HTTPError:
-            raise SlackException(status_code=res.status_code, content=res.content.decode("utf-8"))
+        except HTTPError as e:
+            raise SlackException(status_code=res.status_code, content=res.content.decode("utf-8")) from e

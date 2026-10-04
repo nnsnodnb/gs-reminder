@@ -28,15 +28,13 @@ gs-reminder = "gs_reminder.notifier:main"
 
 [dependency-groups]
 dev = [
-    "black>=22.12,<26.0",
-    "isort>=6.1.0,<7.0.0",
-    "flake8>=5.0.4,<8.0.0",
     "mypy>=0.991,<1.20",
     "types-requests>=2.32.4,<3.0.0",
     "requests-mock>=1.1.0,<2.0.0",
     "pytest>=7.0.0,<8.5.0",
     "hatch>=1.14.2",
     "uv-dynamic-versioning>=0.11.2",
+    "ruff>=0.16.10",
 ]
 
 [build-system]
@@ -60,24 +58,20 @@ vsc = "git"
 vcs = "git"
 style = "pep440"
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-include = '\.pyi?$'
-exclude = '''
-(
-    /(
-         \.git
-        |\.github
-        |\.mypy_cache
-        |\.pytest_cache
-    )/
-)
-'''
+
+[tool.ruff.lint]
+extend-select = ["E501"]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
 
 [tool.mypy]
 ignore_missing_imports = true
-
-[tool.isort]
-include_trailing_comma = true
-line_length = 120
-multi_line_output = 5
