@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/github-pr-reminder.iml" filepath="$PROJECT_DIR$/.idea/github-pr-reminder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/gs-reminder.iml" filepath="$PROJECT_DIR$/.idea/gs-reminder.iml" />
     </modules>
   </component>
 </project>

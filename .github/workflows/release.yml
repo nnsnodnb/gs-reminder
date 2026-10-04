@@ -17,16 +17,14 @@ jobs:
       with:
         python-version: "3.12"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip
-        pip install -r .github/requirements.txt
-        poetry config virtualenvs.in-project true
-        poetry run pip install -U setuptools pip
-        poetry self add "poetry-dynamic-versioning[plugin]"
+    - name: Install required-version defined in pyproject.toml
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        python-version: "3.12"
+        enable-cache: 'true'
 
     - name: Build package
-      run: poetry build
+      run: uv build
 
     - name: Upload distribution
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
