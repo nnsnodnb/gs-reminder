@@ -28,7 +28,7 @@ gs-reminder = "gs_reminder.notifier:main"
 
 [dependency-groups]
 dev = [
-    "black>=22.12,<26.0",
+    "black>=26.3,<26.4",
     "isort>=6.1.0,<7.0.0",
     "flake8>=5.0.4,<8.0.0",
     "mypy>=0.991,<1.20",
