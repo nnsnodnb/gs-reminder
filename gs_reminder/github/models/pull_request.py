@@ -1,4 +1,4 @@
-from typing import Annotated, Optional
+from typing import Annotated
 
 from pydantic import BaseModel, Field
 
@@ -16,7 +16,7 @@ class PullRequest(BaseModel):
     user: User
     assignees: Annotated[list[User], Field(default_factory=lambda: list)]
     requested_reviewers: Annotated[list[User], Field(default_factory=lambda: list)]
-    draft: Optional[bool]
+    draft: bool | None
 
     def __str__(self) -> str:
         title = f"Pull Request [#{self.number}] {self.title} from {str(self.user)}"
