@@ -14,7 +14,7 @@ Notify Slack of a review of Pull Requests in the GitHub repository.
 
 ## Environments
 
-- Python 3.9 or later
+- Python 3.10 or later
   - uv
 
 ## Usage
