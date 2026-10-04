@@ -1,7 +1,7 @@
 import json
 import os
+from collections.abc import Generator
 from pathlib import Path
-from typing import Generator, List
 
 import pytest
 
@@ -17,7 +17,7 @@ def slack_url() -> Generator:
 
 
 @pytest.fixture()
-def bridge_usernames() -> List[BridgeUsername]:
+def bridge_usernames() -> list[BridgeUsername]:
     usernames = [BridgeUsername(github=f"user{i}", slack=f"slack.user{i}") for i in range(5)]
     usernames += [
         BridgeUsername(github="octocat", slack="slack.octocat"),

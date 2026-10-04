@@ -1,11 +1,11 @@
-from typing import Any, Dict
+from typing import Any
 
 
 class _AbstractException(Exception):
     status_code: int
-    response: Dict[Any, Any]
+    response: dict[Any, Any]
 
-    def __init__(self, status_code: int, response: Dict[Any, Any]) -> None:
+    def __init__(self, status_code: int, response: dict[Any, Any]) -> None:
         self.status_code = status_code
         self.response = response
 
@@ -16,7 +16,7 @@ class _AbstractException(Exception):
 class GitHubException(_AbstractException):
     detail: str
 
-    def __init__(self, status_code: int, response: Dict[Any, Any], detail: str) -> None:
+    def __init__(self, status_code: int, response: dict[Any, Any], detail: str) -> None:
         self.status_code = status_code
         self.response = response
         self.detail = detail
