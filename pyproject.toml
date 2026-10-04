@@ -28,7 +28,7 @@ gs-reminder = "gs_reminder.notifier:main"
 
 [dependency-groups]
 dev = [
-    "mypy>=0.991,<1.20",
+    "mypy>=2.4,<3",
     "types-requests>=2.32.4,<3.0.0",
     "requests-mock>=1.1.0,<2.0.0",
     "pytest>=9.0.3,<10.0.0",
