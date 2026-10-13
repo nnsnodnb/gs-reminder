@@ -2,7 +2,7 @@
 name = "gs-reminder"
 description = "Notify Slack of a review of Pull Requests in the GitHub repository."
 authors = [{ name = "nnsnodnb", email = "nnsnodnb@gmail.com" }]
-requires-python = ">=3.10,<3.15"
+requires-python = ">=3.15,<3.16"
 readme = "README.md"
 license = "MIT"
 classifiers = [
