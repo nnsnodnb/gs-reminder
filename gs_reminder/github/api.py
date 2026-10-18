@@ -39,9 +39,7 @@ class Client:
                 break
 
             # filter not draft pull requests
-            items = (
-                pull for item in res_json if not (pull := PullRequest(**item)).draft
-            )
+            items = (pull for item in res_json if not (pull := PullRequest(**item)).draft)
             pulls += items
 
             if len(pulls) >= limit:
