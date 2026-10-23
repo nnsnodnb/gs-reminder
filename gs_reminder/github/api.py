@@ -2,8 +2,8 @@ import urllib.parse
 from dataclasses import dataclass, field
 from typing import Any
 
-import requests
-from requests.exceptions import HTTPError
+import httpx2
+from httpx2 import HTTPStatusError
 
 from ..error import GitHubException
 from .models.pull_request import PullRequest
@@ -29,11 +29,11 @@ class Client:
         }
         pulls: list[PullRequest] = []
         while True:
-            res = requests.get(url=api_url, params=params, headers=headers)
+            res = httpx2.get(url=api_url, params=params, headers=headers)
             res_json = res.json()
             try:
                 res.raise_for_status()
-            except HTTPError as e:
+            except HTTPStatusError as e:
                 raise GitHubException(status_code=e.response.status_code, response=res_json, detail="get_pulls") from e
             if not res_json:
                 break
@@ -59,11 +59,11 @@ class Client:
             "Authorization": f"bearer {self.github_token}",
             "Accept": "application/vnd.github.v3.text-match+json",
         }
-        res = requests.get(url=api_url, headers=headers)
+        res = httpx2.get(url=api_url, headers=headers)
         res_json = res.json()
         try:
             res.raise_for_status()
-        except HTTPError as e:
+        except HTTPStatusError as e:
             raise GitHubException(
                 status_code=e.response.status_code, response=res_json, detail="get_total_pulls"
             ) from e

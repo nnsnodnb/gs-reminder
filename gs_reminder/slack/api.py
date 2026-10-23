@@ -1,10 +1,9 @@
-import json
 import os
 from dataclasses import dataclass, field
 from typing import Any
 
-import requests
-from requests.exceptions import HTTPError
+import httpx2
+from httpx2 import HTTPError
 
 from ..bridge import BridgeUsername
 from ..error import SlackException
@@ -132,7 +131,7 @@ class Client:
             "blocks": self._build_block(repo=repo, pulls=pulls, total_pulls=total_pulls),
         }
 
-        res = requests.post(url=self._webhook_url, data=json.dumps(payload))
+        res = httpx2.post(url=self._webhook_url, json=payload)
         try:
             res.raise_for_status()
         except HTTPError as e:
