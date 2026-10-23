@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-26.04-arm
 
     steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - uses: actions/checkout@v7.0.1
 
-    - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+    - uses: actions/create-github-app-token@v3.3.0
       id: get-github-apps
       with:
         client-id: ${{ secrets.APP_ID }}
@@ -26,7 +26,7 @@ jobs:
         repositories: gs-reminder
 
     - name: Install required-version defined in pyproject.toml
-      uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      uses: astral-sh/setup-uv@v10.3.2
       with:
         python-version: "3.15"
         enable-cache: 'true'
@@ -47,10 +47,10 @@ jobs:
         python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14", "3.15" ]
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/checkout@v7.0.1
 
       - name: Install required-version defined in pyproject.toml
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@v10.3.2
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: 'true'
