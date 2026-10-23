@@ -108,27 +108,26 @@ def test_build_block(bridge_usernames, pull, repo, total_pulls_is_over):
     assert blocks[::-1][0]["type"] == "divider"
 
 
-def test_success_post(requests_mock, pull, repo):
-    requests_mock.post(os.getenv("SLACK_URL"), json={})
+def test_success_post(httpx2_mock, pull, repo):
+    httpx2_mock.add_response(method="POST", url=os.getenv("SLACK_URL"), json={})
 
     client = Client(usernames=[], icon=True, exclude_users=[])
 
     client.post(repo=repo, pulls=[pull], total_pulls=1)
 
-    assert requests_mock.called
-    assert len(requests_mock.request_history) == 1
-    assert requests_mock.request_history[0].method == "POST"
-    assert requests_mock.request_history[0].url == os.getenv("SLACK_URL")
+    requests = httpx2_mock.get_requests()
+    assert len(requests) == 1
+    assert requests[0].method == "POST"
+    assert str(requests[0].url) == os.getenv("SLACK_URL")
 
 
-def test_post_empty_pulls(requests_mock, repo):
-    requests_mock.post(os.getenv("SLACK_URL"), json={})
+def test_post_empty_pulls(httpx2_mock, repo):
 
     client = Client(usernames=[], icon=True, exclude_users=[])
 
     client.post(repo=repo, pulls=[], total_pulls=0)
 
-    assert not requests_mock.called
+    assert httpx2_mock.get_requests() == []
 
 
 @pytest.mark.parametrize(
@@ -139,16 +138,21 @@ def test_post_empty_pulls(requests_mock, repo):
     ],
     ids=["Bad Request", "Internal Server Error"],
 )
-def test_failure_post(requests_mock, pull, repo, status_code, content):
-    requests_mock.post(os.getenv("SLACK_URL"), content=content, status_code=status_code)
+def test_failure_post(httpx2_mock, pull, repo, status_code, content):
+    httpx2_mock.add_response(
+        method="POST",
+        url=os.getenv("SLACK_URL"),
+        content=content,
+        status_code=status_code,
+    )
 
     client = Client(usernames=[], icon=True, exclude_users=[])
 
     with pytest.raises(SlackException) as e:
         client.post(repo=repo, pulls=[pull], total_pulls=1)
 
-    assert requests_mock.called
-    assert len(requests_mock.request_history) == 1
-    assert requests_mock.request_history[0].method == "POST"
+    requests = httpx2_mock.get_requests()
+    assert len(requests) == 1
+    assert requests[0].method == "POST"
     assert e.value.status_code == status_code
     assert e.value.response == {"detail": content.decode("utf-8")}
