@@ -131,7 +131,7 @@ class Client:
             "blocks": self._build_block(repo=repo, pulls=pulls, total_pulls=total_pulls),
         }
 
-        res = httpx2.post(url=self._webhook_url, data=payload)
+        res = httpx2.post(url=self._webhook_url, json=payload)
         try:
             res.raise_for_status()
         except HTTPError as e:
