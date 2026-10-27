@@ -29,12 +29,12 @@ gs-reminder = "gs_reminder.notifier:main"
 
 [dependency-groups]
 dev = [
-    "mypy>=2.4,<3",
-    "pytest>=9.0.3,<10.0.0",
-    "hatch>=1.14.2",
-    "uv-dynamic-versioning>=0.11.2",
-    "ruff>=0.16.10",
-    "httpx2-pytest>=2.0.0",
+    "mypy",
+    "pytest",
+    "hatch",
+    "uv-dynamic-versioning",
+    "ruff",
+    "httpx2-pytest",
 ]
 
 [build-system]
