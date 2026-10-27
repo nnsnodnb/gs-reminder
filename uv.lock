@@ -431,12 +431,12 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "hatch", specifier = ">=1.14.2" },
-    { name = "httpx2-pytest", specifier = ">=2.0.0" },
-    { name = "mypy", specifier = ">=2.4,<3" },
-    { name = "pytest", specifier = ">=9.0.3,<10.0.0" },
-    { name = "ruff", specifier = ">=0.16.10" },
-    { name = "uv-dynamic-versioning", specifier = ">=0.11.2" },
+    { name = "hatch" },
+    { name = "httpx2-pytest" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff" },
+    { name = "uv-dynamic-versioning" },
 ]
 
 [[package]]
