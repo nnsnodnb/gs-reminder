@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7.0.1
 
-    - uses: actions/create-github-app-token@v3.3.0
+    - uses: actions/create-github-app-token@v3.4.0
       id: get-github-apps
       with:
         client-id: ${{ secrets.APP_ID }}
